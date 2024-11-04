@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eflyer - Shopping Cart</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body>
+    <!-- Product Section -->
+    <div class="container">
+        <h1>Product List</h1>
+        <div class="row">
+            <div class="col-lg-4 col-sm-4">
+                <div class="box_main">
+                    <h4 class="product_name">Man T-Shirt</h4>
+                    <p class="price_text">Price: <span>$30</span></p>
+                   
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-4">
+                <div class="box_main">
+                    <h4 class="product_name">Woman Scarf</h4>
+                    <p class="price_text">Price: <span>$25</span></p>
+                    <div class="btn_main">
+                        <button class="add_to_cart_btn" onclick="addToCart('Woman Scarf', 25)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-4">
+                <div class="box_main">
+                    <h4 class="product_name">Laptop</h4>
+                    <p class="price_text">Price: <span>$500</span></p>
+                    <div class="btn_main">
+                        <button class="add_to_cart_btn" onclick="addToCart('Laptop', 500)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Section -->
+    <div class="container mt-5">
+        <h2>Your Cart</h2>
+        <div id="cartItems"></div>
+        <div id="cartTotal"></div>
+        <button onclick="checkout()" class="btn btn-primary">Checkout</button>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        function addToCart(productName, price) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            let existingProduct = cart.find(item => item.name === productName);
+
+            if (existingProduct) {
+                existingProduct.quantity += 1;
+            } else {
+                cart.push({ name: productName, price: price, quantity: 1 });
+            }
+
+            localStorage.setItem('cart', JSON.stringify(cart));
+            alert(productName + ' added to cart!');
+            displayCart();
+        }
+
+        function displayCart() {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            let cartItems = document.getElementById('cartItems');
+            let cartTotal = document.getElementById('cartTotal');
+            cartItems.innerHTML = '';
+            let total = 0;
+
+            cart.forEach(item => {
+                total += item.price * item.quantity;
+                cartItems.innerHTML += `
+                    <p>${item.name} - $${item.price} x ${item.quantity}</p>
+                `;
+            });
+
+            cartTotal.innerHTML = `<p>Total: $${total}</p>`;
+        }
+
+        function checkout() {
+            localStorage.removeItem('cart');
+            alert('Thank you for your purchase!');
+            displayCart();
+        }
+
+        // Display the cart when the page loads
+        displayCart();
+    </script>
+</body>
+</html>
